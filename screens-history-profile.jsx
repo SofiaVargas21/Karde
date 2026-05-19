@@ -57,7 +57,7 @@ function HistoryScreen({ state, go }) {
 
         {/* Main chart */}
         <div style={{ marginTop: 16 }}>
-          {metric === 'tension' && <TensionHistory state={state} />}
+          {metric === 'tension' && <TensionHistory state={state} period={period} />}
           {metric === 'imc' && <IMCHistory state={state} />}
           {metric === 'water' && <WaterHistory state={state} />}
           {metric === 'pulse' && <PulseHistory state={state} />}
@@ -94,7 +94,42 @@ function HistoryScreen({ state, go }) {
   );
 }
 
-function TensionHistory({ state }) {
+function TensionHistory({ state, period }) {
+  if (period === 'day') return <TensionDayView state={state} />;
+  if (period === 'week') return <TensionWeekView state={state} />;
+  if (period === 'month') return <TensionMonthView state={state} />;
+  if (period === 'year') return <TensionYearView state={state} />;
+  return null;
+}
+
+function TensionDayView({ state }) {
+  const sys = state.lastTension.sys;
+  const dia = state.lastTension.dia;
+  const tCls = classifyTension(sys, dia);
+  return (
+    <Card style={{ padding: 18 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--muted)', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase' }}>
+          <Icon name="heart" size={14} color="var(--hibiscus)" /> TENSIÓN ARTERIAL
+        </div>
+        <Icon name="chevronR" size={16} color="var(--muted-2)" />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+        <span className="serif tnum" style={{ fontSize: 64, lineHeight: 1, letterSpacing: '-.02em' }}>{sys}</span>
+        <span style={{ fontSize: 24, color: 'var(--muted-2)' }}>/</span>
+        <span className="serif tnum" style={{ fontSize: 40, lineHeight: 1, color: 'var(--ink-2)', letterSpacing: '-.02em' }}>{dia}</span>
+        <span style={{ fontSize: 13, color: 'var(--muted)', marginLeft: 4 }}>mmHg</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, marginBottom: 24 }}>
+        <span style={{ padding: '4px 12px', borderRadius: 999, background: tCls.soft, color: tCls.color, fontSize: 12, fontWeight: 700 }}>{tCls.label}</span>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>hace 2h · pulso {state.lastTension.pulse}</span>
+      </div>
+      <TensionIndicator sys={sys} dia={dia} />
+    </Card>
+  );
+}
+
+function TensionWeekView({ state }) {
   const sys = state.history.sys;
   const dia = state.history.dia;
   const avgS = Math.round(sys.reduce((a,b)=>a+b,0) / sys.length);
@@ -116,16 +151,207 @@ function TensionHistory({ state }) {
       </div>
       <div style={{ display: 'flex', gap: 14, marginTop: 12, fontSize: 11 }}>
         <Legend2 color="var(--hibiscus)" label="Sistólica" />
-        <Legend2 color="var(--sage)" label="Diastólica" />
+        <Legend2 color="var(--sage-deep)" label="Diastólica" />
       </div>
       <LineChart
         series={[
           { data: sys, color: 'var(--hibiscus)' },
-          { data: dia, color: 'var(--sage)' },
+          { data: dia, color: 'var(--sage-deep)' },
         ]}
-        width={320} height={180} yMin={60} yMax={160} fill
+        width={320} height={180} yMin={60} yMax={160} fill labels={['L','M','X','J','V','S','D']}
       />
     </Card>
+  );
+}
+
+function TensionMonthView({ state }) {
+  const sysData = Array.from({length:30}, (_,i) => 120 + Math.sin(i)*15 + Math.random()*10);
+  const diaData = Array.from({length:30}, (_,i) => 80 + Math.sin(i)*5 + Math.random()*5);
+  const labels = Array.from({length:30}, (_,i) => (i+1).toString());
+  
+  return (
+    <div>
+      <Card style={{ padding: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <div>
+            <div style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '.1em', fontWeight: 700 }}>PROMEDIO MENSUAL</div>
+            <div className="serif tnum" style={{ fontSize: 38, lineHeight: 1, marginTop: 2 }}>131<span style={{ color: 'var(--muted-2)', fontSize: 22 }}>/</span>85</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <select style={{ background: 'var(--surface-2)', border: '1px solid var(--border-soft)', borderRadius: 8, padding: '4px 8px', fontSize: 12, fontWeight: 600 }}>
+              <option>Octubre</option>
+              <option>Septiembre</option>
+            </select>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 14, marginTop: 12, fontSize: 11, flexWrap: 'wrap' }}>
+          <Legend2 color="var(--hibiscus)" label="Sistólica" />
+          <Legend2 color="var(--sage-deep)" label="Diastólica" />
+          <Legend2 color="var(--hibiscus-tint)" label="(max-to-min)" />
+        </div>
+        
+        <div className="hscroll" style={{ overflowX: 'auto', marginTop: 16, paddingBottom: 8, marginLeft: -16, marginRight: -16, paddingLeft: 16, paddingRight: 16 }}>
+          <div style={{ width: 800 }}>
+             <MonthChart sys={sysData} dia={diaData} labels={labels} />
+          </div>
+        </div>
+      </Card>
+
+      <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <StatCard label="Lecturas" value="58" suffix="" icon="file" />
+        <StatCard label="Picos altos" value="3" suffix="días" icon="alert" />
+      </div>
+
+      <SectionPad2>
+        <SectionTitle title="Calendario de Tendencias" subtitle="Matriz" />
+        <Card style={{ padding: 16 }}>
+          <Heatmap />
+        </Card>
+      </SectionPad2>
+    </div>
+  );
+}
+
+function MonthChart({ sys, dia, labels }) {
+  const w = 800, h = 180, mn = 60, mx = 160;
+  const pad = { l: 28, r: 16, t: 8, b: 24 };
+  const cw = w - pad.l - pad.r;
+  const ch = h - pad.t - pad.b;
+  const xAt = (i) => pad.l + (i / 29) * cw;
+  const yAt = (v) => pad.t + Math.max(0, Math.min(1, 1 - (v - mn) / (mx - mn))) * ch;
+  
+  const path = (data) => data.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xAt(i)} ${yAt(v)}`).join(' ');
+  const bandArea = sys.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xAt(i)} ${yAt(v + 12)}`).join(' ') + ' ' + 
+                   sys.map((v, i) => `L ${xAt(29 - i)} ${yAt(sys[29 - i] - 12)}`).join(' ') + ' Z';
+
+  const ticks = [60, 80, 120, 160];
+  return (
+    <svg width={w} height={h}>
+      {ticks.map(t => (
+        <g key={t}>
+          <line x1={pad.l} x2={w-pad.r} y1={yAt(t)} y2={yAt(t)} stroke="#EFE3CF" strokeDasharray="2 4" />
+          <text x={pad.l - 4} y={yAt(t)} fontSize="9" fill="#8A7969" textAnchor="end" dominantBaseline="middle">{t}</text>
+        </g>
+      ))}
+      <path d={bandArea} fill="var(--hibiscus-tint)" opacity="0.4" />
+      <path d={path(sys)} fill="none" stroke="var(--hibiscus)" strokeWidth="2" strokeLinecap="round" />
+      {sys.map((v, i) => <circle key={`s${i}`} cx={xAt(i)} cy={yAt(v)} r="3" fill="#FFFEFB" stroke="var(--hibiscus)" strokeWidth="1.5" />)}
+      
+      <path d={path(dia)} fill="none" stroke="var(--sage-deep)" strokeWidth="2" strokeLinecap="round" />
+      {dia.map((v, i) => <circle key={`d${i}`} cx={xAt(i)} cy={yAt(v)} r="3" fill="#FFFEFB" stroke="var(--sage-deep)" strokeWidth="1.5" />)}
+      
+      {labels.map((l, i) => <text key={i} x={xAt(i)} y={h - 4} fontSize="9" fill="#8A7969" textAnchor="middle">{l}</text>)}
+    </svg>
+  );
+}
+
+function Heatmap() {
+  const months = ['Oct', 'Sep', 'Ago'];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {months.map(m => (
+        <div key={m} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 28, fontSize: 10, fontWeight: 700, color: 'var(--muted)' }}>{m}</div>
+          <div style={{ display: 'flex', gap: 4, flex: 1 }}>
+            {Array.from({length:31}).map((_, i) => {
+               const rnd = Math.random();
+               const bg = rnd > 0.9 ? 'var(--st-htn1)' : (rnd > 0.7 ? 'var(--st-elevated)' : 'var(--st-normal)');
+               return <div key={i} style={{ flex: 1, height: 12, borderRadius: 2, background: bg }} />
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TensionYearView({ state }) {
+  const sysAvg = [115, 118, 122, 125, 131, 135, 130, 128, 125, 122, 120, 118];
+  const diaAvg = [75, 78, 80, 82, 85, 88, 85, 84, 80, 78, 76, 75];
+  const labels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  
+  return (
+    <div>
+      <Card style={{ padding: 16 }}>
+        <div style={{ fontSize: 11, color: 'var(--muted)', letterSpacing: '.1em', fontWeight: 700, textTransform: 'uppercase' }}>
+          MACRO-TREND LINE CHART - Mensuales promedios
+        </div>
+        <div style={{ marginTop: 16 }}>
+           <MacroTrendChart sys={sysAvg} dia={diaAvg} labels={labels} />
+        </div>
+      </Card>
+      
+      <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr', gap: 10 }}>
+         <Card style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--st-normal-soft)', color: 'var(--st-normal)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={20} /></div>
+            <div style={{ flex: 1 }}>
+               <div style={{ fontSize: 13, fontWeight: 700 }}>Días en rango saludable</div>
+               <div className="serif tnum" style={{ fontSize: 22, fontWeight: 800, marginTop: 2 }}>78%</div>
+            </div>
+         </Card>
+         <Card style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--sage-soft)', color: 'var(--sage-deep)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 18 }}>Σ</div>
+            <div style={{ flex: 1 }}>
+               <div style={{ fontSize: 13, fontWeight: 700 }}>Desviación Estándar</div>
+               <div className="serif tnum" style={{ fontSize: 22, fontWeight: 800, marginTop: 2 }}>6 <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)' }}>mmHg</span></div>
+            </div>
+         </Card>
+         <Card style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--st-htn1-soft)', color: 'var(--st-htn1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="arrowL" size={20} style={{ transform: 'rotate(90deg)' }} /></div>
+            <div style={{ flex: 1 }}>
+               <div style={{ fontSize: 13, fontWeight: 700 }}>Comparativa Anual</div>
+               <div className="serif tnum" style={{ fontSize: 22, fontWeight: 800, marginTop: 2 }}>+2 <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)' }}>mmHg vs. año anterior</span></div>
+            </div>
+         </Card>
+      </div>
+    </div>
+  );
+}
+
+function MacroTrendChart({ sys, dia, labels }) {
+  const w = 320, h = 200, mn = 60, mx = 160;
+  const pad = { l: 28, r: 8, t: 8, b: 24 };
+  const cw = w - pad.l - pad.r;
+  const ch = h - pad.t - pad.b;
+  const xAt = (i) => pad.l + (i / 11) * cw;
+  const yAt = (v) => pad.t + Math.max(0, Math.min(1, 1 - (v - mn) / (mx - mn))) * ch;
+  
+  const path = (data) => data.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xAt(i)} ${yAt(v)}`).join(' ');
+  
+  const y130 = yAt(130);
+  const hRed = y130 - pad.t;
+  const y110 = yAt(110);
+  const hYellow = y110 - y130;
+  const y60 = yAt(60);
+  const hGreen = y60 - y110;
+  const ticks = [60, 70, 110, 130, 150];
+
+  return (
+    <div style={{ overflowX: 'auto', marginLeft: -16, marginRight: -16, paddingLeft: 16, paddingRight: 16 }}>
+      <svg width={w} height={h}>
+        <rect x={pad.l} y={pad.t} width={cw} height={Math.max(0, hRed)} fill="var(--st-crisis-soft)" opacity="0.4" />
+        <rect x={pad.l} y={y130} width={cw} height={Math.max(0, hYellow)} fill="var(--st-elevated-soft)" opacity="0.4" />
+        <rect x={pad.l} y={y110} width={cw} height={Math.max(0, hGreen)} fill="var(--st-normal-soft)" opacity="0.4" />
+        
+        {ticks.map(t => (
+           <g key={t}>
+             <line x1={pad.l} x2={w-pad.r} y1={yAt(t)} y2={yAt(t)} stroke="#EFE3CF" strokeDasharray="2 4" />
+             <text x={pad.l - 4} y={yAt(t)} fontSize="9" fill="#8A7969" textAnchor="end" dominantBaseline="middle">{t}</text>
+           </g>
+        ))}
+
+        {labels.map((l, i) => (
+           <text key={i} x={xAt(i)} y={h - 4} fontSize="9" fill="#8A7969" textAnchor="middle">{l}</text>
+        ))}
+
+        <path d={path(sys)} fill="none" stroke="var(--hibiscus)" strokeWidth="2" strokeLinecap="round" />
+        {sys.map((v, i) => <circle key={`s${i}`} cx={xAt(i)} cy={yAt(v)} r="3" fill="#FFFEFB" stroke="var(--hibiscus)" strokeWidth="1.5" />)}
+
+        <path d={path(dia)} fill="none" stroke="var(--sage-deep)" strokeWidth="2" strokeLinecap="round" />
+        {dia.map((v, i) => <circle key={`d${i}`} cx={xAt(i)} cy={yAt(v)} r="3" fill="#FFFEFB" stroke="var(--sage-deep)" strokeWidth="1.5" />)}
+      </svg>
+    </div>
   );
 }
 

@@ -303,7 +303,7 @@ function WaterRing({ value = 5, goal = 8, size = 180, accent = 'var(--sage)' }) 
 // ─────────────────────────────────────────────────────────────
 // Sparkline / Line chart
 // ─────────────────────────────────────────────────────────────
-function LineChart({ series = [], width = 320, height = 140, yMin, yMax, showAxis = true, fill = false }) {
+function LineChart({ series = [], width = 320, height = 140, yMin, yMax, showAxis = true, fill = false, labels = [] }) {
   // series: [{ data: [..], color: '#...', label: '...' }]
   const allVals = series.flatMap(s => s.data);
   const mn = yMin ?? Math.min(...allVals) - 5;
@@ -337,6 +337,9 @@ function LineChart({ series = [], width = 320, height = 140, yMin, yMax, showAxi
             <circle key={j} cx={xAt(j)} cy={yAt(v)} r="2.5" fill="#FFFEFB" stroke={s.color} strokeWidth="1.5" />
           ))}
         </g>
+      ))}
+      {labels && labels.length > 0 && labels.map((lbl, i) => (
+        <text key={`lbl-${i}`} x={xAt(i)} y={height - 2} fontSize="9" fill="#8A7969" textAnchor="middle">{lbl}</text>
       ))}
     </svg>
   );
