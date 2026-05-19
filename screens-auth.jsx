@@ -44,7 +44,7 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
       <div style={{ marginTop: 26, textAlign: 'center' }}>
         <BrandMark />
         <div className="serif" style={{ fontSize: 38, lineHeight: 1, marginTop: 14, letterSpacing: '-.02em' }}>
-          {step === 0 && 'Bienvenida a Vita'}
+          {step === 0 && 'Bienvenida a Kardé'}
           {step === 1 && 'Cuéntanos de ti'}
           {step === 2 && 'Casi listo'}
         </div>
