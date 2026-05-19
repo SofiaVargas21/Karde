@@ -88,12 +88,8 @@ function BrandMark() {
       display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px',
       background: 'var(--surface)', borderRadius: 999, boxShadow: '0 6px 18px rgba(155,45,63,.10)'
     }}>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M12 4c2 2 4 4 4 7a4 4 0 1 1-8 0c0-3 2-5 4-7Z" fill="#9B2D3F" />
-        <circle cx="12" cy="11" r="1.4" fill="#FFFEFB" />
-        <path d="M5 18c2-1 5-1.5 7-1.5s5 .5 7 1.5" stroke="#4A6B5C" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-      <span style={{ fontWeight: 700, letterSpacing: '.04em' }}>VITA<span style={{ color: 'var(--hibiscus)' }}>·</span>CONTROL</span>
+      <img src="Logo carde.png" alt="Logo Kardé" style={{ width: 22, height: 22, objectFit: 'contain' }} />
+      <span style={{ fontWeight: 700, letterSpacing: '.04em' }}>KARDÉ<span style={{ color: 'var(--hibiscus)' }}>·</span>CONTROL</span>
     </div>
   );
 }
@@ -163,7 +159,7 @@ function CredentialsStep({ data, set }) {
 }
 
 function LoginScreen({ onLogin, onGoSignup }) {
-  const [email, setEmail] = useStateAuth('ana@vita.health');
+  const [email, setEmail] = useStateAuth('ana@karde.health');
   const [pass, setPass] = useStateAuth('');
   return (
     <div style={{
@@ -183,7 +179,7 @@ function LoginScreen({ onLogin, onGoSignup }) {
       <div style={{ flex: 1 }} />
       <Button full size="lg" onClick={() => onLogin({ correo: email })}>Entrar</Button>
       <button onClick={onGoSignup} style={{ border: 0, background: 'transparent', margin: '14px auto 0', color: 'var(--muted)', fontSize: 13 }}>
-        ¿Nuevo en VitaControl? <span style={{ color: 'var(--hibiscus)', fontWeight: 700 }}>Crea tu cuenta</span>
+        ¿Nuevo en Kardé? <span style={{ color: 'var(--hibiscus)', fontWeight: 700 }}>Crea tu cuenta</span>
       </button>
     </div>
   );

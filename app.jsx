@@ -84,7 +84,7 @@ function App() {
   const [tab, setTab] = useState('home');
   const [user, setUser] = useState({
     nombre: 'Ana López',
-    correo: 'ana@vita.health',
+    correo: 'ana@karde.health',
     sexo: 'F', edad: 32, peso: 68, altura: 1.65,
   });
 

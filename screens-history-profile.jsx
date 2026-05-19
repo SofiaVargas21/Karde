@@ -270,7 +270,7 @@ function ProfileScreen({ state, user, setUser, go }) {
         <SectionPad2>
           <Card style={{ padding: 0 }}>
             <MenuRow icon="info" label="Aviso médico y privacidad" />
-            <MenuRow icon="sparkle" label="Sobre VitaControl" />
+            <MenuRow icon="sparkle" label="Sobre Kardé" />
             <MenuRow icon="logout" label="Cerrar sesión" danger onClick={() => go('login')} />
           </Card>
         </SectionPad2>
