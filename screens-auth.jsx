@@ -16,8 +16,10 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
   const back = () => step > 0 ? setStep(step - 1) : null;
 
   return (
-    <div style={{ padding: '20px 20px 24px', minHeight: '100%', display: 'flex', flexDirection: 'column',
-      background: 'linear-gradient(180deg, var(--hibiscus-tint) 0%, var(--bg) 38%)' }}>
+    <div style={{
+      padding: '20px 20px 24px', minHeight: '100%', display: 'flex', flexDirection: 'column',
+      background: 'linear-gradient(180deg, var(--hibiscus-tint) 0%, var(--bg) 38%)'
+    }}>
       {/* Top */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={back} disabled={step === 0} style={{
@@ -27,7 +29,7 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}><Icon name="arrowL" size={18} /></button>
         <div style={{ display: 'flex', gap: 6 }}>
-          {[0,1,2].map(i => (
+          {[0, 1, 2].map(i => (
             <div key={i} style={{
               width: i === step ? 22 : 6, height: 6, borderRadius: 999,
               background: i <= step ? 'var(--hibiscus)' : 'var(--border)',
@@ -82,12 +84,14 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
 
 function BrandMark() {
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px',
-      background: 'var(--surface)', borderRadius: 999, boxShadow: '0 6px 18px rgba(155,45,63,.10)' }}>
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 14px',
+      background: 'var(--surface)', borderRadius: 999, boxShadow: '0 6px 18px rgba(155,45,63,.10)'
+    }}>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M12 4c2 2 4 4 4 7a4 4 0 1 1-8 0c0-3 2-5 4-7Z" fill="#9B2D3F"/>
-        <circle cx="12" cy="11" r="1.4" fill="#FFFEFB"/>
-        <path d="M5 18c2-1 5-1.5 7-1.5s5 .5 7 1.5" stroke="#4A6B5C" strokeWidth="1.6" strokeLinecap="round"/>
+        <path d="M12 4c2 2 4 4 4 7a4 4 0 1 1-8 0c0-3 2-5 4-7Z" fill="#9B2D3F" />
+        <circle cx="12" cy="11" r="1.4" fill="#FFFEFB" />
+        <path d="M5 18c2-1 5-1.5 7-1.5s5 .5 7 1.5" stroke="#4A6B5C" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
       <span style={{ fontWeight: 700, letterSpacing: '.04em' }}>VITA<span style={{ color: 'var(--hibiscus)' }}>·</span>CONTROL</span>
     </div>
@@ -127,7 +131,7 @@ function ProfileStep({ data, set }) {
       <div>
         <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 8 }}>Sexo</div>
         <div style={{ display: 'flex', gap: 8 }}>
-          {[{k:'F',l:'Femenino'},{k:'M',l:'Masculino'},{k:'O',l:'Otro'}].map(o => {
+          {[{ k: 'F', l: 'Femenino' }, { k: 'M', l: 'Masculino' }, { k: 'O', l: 'Otro' }].map(o => {
             const on = data.sexo === o.k;
             return (
               <button key={o.k} onClick={() => set('sexo', o.k)} style={{
@@ -162,8 +166,10 @@ function LoginScreen({ onLogin, onGoSignup }) {
   const [email, setEmail] = useStateAuth('ana@vita.health');
   const [pass, setPass] = useStateAuth('');
   return (
-    <div style={{ padding: 20, minHeight: '100%', display: 'flex', flexDirection: 'column',
-      background: 'linear-gradient(180deg, var(--hibiscus-tint) 0%, var(--bg) 40%)' }}>
+    <div style={{
+      padding: 20, minHeight: '100%', display: 'flex', flexDirection: 'column',
+      background: 'linear-gradient(180deg, var(--hibiscus-tint) 0%, var(--bg) 40%)'
+    }}>
       <div style={{ paddingTop: 40, textAlign: 'center' }}>
         <BrandMark />
         <div className="serif" style={{ fontSize: 38, marginTop: 18, letterSpacing: '-.02em' }}>Hola de nuevo</div>
