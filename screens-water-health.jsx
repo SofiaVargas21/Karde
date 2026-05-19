@@ -5,12 +5,26 @@ const { useState: useStateM3 } = React;
 // WATER + JAMAICA SCREEN
 // ─────────────────────────────────────────────────────────────
 function WaterScreen({ state, setWater, addJamaica, go }) {
+  const [showRecipe, setShowRecipe] = useStateM3(false);
+  const [showToast, setShowToast] = useStateM3(false);
+  
   const w = state.water;
   const j = state.jamaica;
   const pct = Math.min(100, Math.round((w.value / w.goal) * 100));
 
+  const handleAddJamaica = () => {
+    if (j >= 3) {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      return;
+    }
+    addJamaica(j + 1);
+  };
+
   return (
     <div style={{ paddingBottom: 90, background: 'var(--bg)' }}>
+      {showToast && <Toast tone="warning">Límite alcanzado: máximo 3 tazas diarias.</Toast>}
+      {showRecipe && <JamaicaRecipeOverlay onClose={() => setShowRecipe(false)} />}
       <SubHeader title="Hidratación" onBack={() => go('home')} />
 
       <div style={{ padding: '6px 16px 0' }}>
@@ -67,7 +81,7 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
         {/* Jamaica */}
         <div style={{ marginTop: 20 }}>
           <SectionTitle subtitle="Infusión natural" title="Agua de jamaica" action={
-            <span style={{ fontSize: 10.5, color: 'var(--hibiscus)', letterSpacing: '.08em', fontWeight: 700 }}>OPCIONAL</span>
+            <button onClick={() => setShowRecipe(true)} style={{ border: 0, background: 'transparent', color: 'var(--hibiscus)', fontWeight: 700, fontSize: 11, letterSpacing: '.04em', textTransform: 'uppercase' }}>VER RECETA</button>
           } />
           <Card style={{ padding: 16, background: 'linear-gradient(135deg, var(--hibiscus-tint) 0%, var(--surface) 70%)' }}>
             <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
@@ -78,7 +92,7 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{j} tazas hoy</div>
                 <div style={{ fontSize: 11.5, color: 'var(--muted)', marginTop: 2 }}>Rica en antioxidantes</div>
               </div>
-              <button onClick={() => addJamaica(j + 1)} style={{
+              <button onClick={handleAddJamaica} style={{
                 border: 0, background: 'var(--hibiscus)', color: '#FFFEFB',
                 width: 40, height: 40, borderRadius: 999,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -98,6 +112,63 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
               <span style={{ marginLeft: 'auto' }}>Promedio: {(state.history.water.reduce((a,b)=>a+b,0) / state.history.water.length).toFixed(1)} vasos</span>
             </div>
           </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+}
+
+// ─────────────────────────────────────────────────────────────
+// RECIPE OVERLAY
+// ─────────────────────────────────────────────────────────────
+function JamaicaRecipeOverlay({ onClose }) {
+  const steps = [
+    { n: 1, t: 'Calentar el agua', icon: 'flame' },
+    { n: 2, t: 'Esperar hasta que hierva', icon: 'lung' },
+    { n: 3, t: 'Preparar hojas de jamaica', icon: 'leaf' },
+    { n: 4, t: 'Triturarlas en un grinder', icon: 'settings' },
+    { n: 5, t: 'Colocarlas en el dosificador', d: 'Al ras = 1 gramo', icon: 'scale' },
+    { n: 6, t: 'Colocar hojas en infusor', icon: 'chevronD' },
+    { n: 7, t: 'Agregar el agua', d: 'Marca = 1 taza', icon: 'drop' },
+    { n: 8, t: 'Esperar 5 minutos', icon: 'history' },
+    { n: 9, t: 'Retirar las hojas', icon: 'chevronR' },
+    { n: 10, t: 'Beber y disfrutar', icon: 'heart' }
+  ];
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, background: 'var(--bg)', zIndex: 100,
+      overflowY: 'auto', display: 'flex', flexDirection: 'column'
+    }}>
+      <SubHeader title="Paso a paso: Jamaica" onBack={onClose} />
+      
+      <div style={{ padding: '0 16px 24px' }}>
+        {/* Warning banner */}
+        <div style={{ display: 'flex', gap: 6, background: 'var(--surface)', padding: '10px 8px', borderRadius: 12, border: '1px solid var(--border-soft)', marginBottom: 20 }}>
+          <div style={{ flex: 1, fontSize: 9.5, color: 'var(--muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textAlign: 'center' }}><Icon name="alert" size={14} /> Lea instrucciones</div>
+          <div style={{ flex: 1, fontSize: 9.5, color: 'var(--st-crisis)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textAlign: 'center' }}><Icon name="flame" size={14} /> Agua caliente</div>
+          <div style={{ flex: 1, fontSize: 9.5, color: 'var(--muted)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, textAlign: 'center' }}><Icon name="user" size={14} /> Lejos de niños</div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {steps.map(s => (
+            <Card key={s.n} style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <span className="serif" style={{ fontSize: 32, lineHeight: 1, color: 'var(--hibiscus)' }}>{s.n}</span>
+                {s.icon && <Icon name={s.icon} size={18} color="var(--muted-2)" />}
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.25 }}>{s.t}</div>
+                {s.d && <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{s.d}</div>}
+              </div>
+            </Card>
+          ))}
+        </div>
+        
+        <div style={{ marginTop: 24 }}>
+          <Button full onClick={onClose} variant="primary">¡Entendido!</Button>
         </div>
       </div>
     </div>
