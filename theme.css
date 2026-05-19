@@ -1,0 +1,141 @@
+/* VitaControl — warm + organic theme */
+:root {
+  /* Surfaces */
+  --bg: #F6EFE3;
+  --bg-deep: #EDE2D0;
+  --surface: #FFFEFB;
+  --surface-2: #F9F1E4;
+  --surface-warm: #F4E6D3;
+
+  /* Ink */
+  --ink: #2A1F1A;
+  --ink-2: #3F3128;
+  --muted: #8A7969;
+  --muted-2: #B6A492;
+  --border: #E6D8C3;
+  --border-soft: #EFE3CF;
+
+  /* Hibiscus accents */
+  --hibiscus: #9B2D3F;
+  --hibiscus-deep: #6E1F2C;
+  --hibiscus-soft: #F2D6D9;
+  --hibiscus-tint: #FAEAE9;
+
+  /* Sage / teal (medical calm) */
+  --sage: #4A6B5C;
+  --sage-deep: #2F4A3F;
+  --sage-soft: #DCE6DD;
+
+  /* Terracotta accent */
+  --terracotta: #C76E4A;
+  --terracotta-soft: #F3D9C9;
+
+  /* Status (calibrated to warm palette) */
+  --st-normal: #4F7A5A;
+  --st-normal-soft: #DDE8DC;
+  --st-elevated: #C99A3E;
+  --st-elevated-soft: #F4E5C3;
+  --st-htn1: #C76E4A;
+  --st-htn1-soft: #F3D9C9;
+  --st-htn2: #A24A3C;
+  --st-htn2-soft: #EFC9BF;
+  --st-crisis: #8E2A2A;
+  --st-crisis-soft: #ECC8C2;
+
+  /* Type */
+  --font-serif: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: #d9c9b0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+
+button { font-family: inherit; }
+
+/* Subtle paper texture for the device room */
+.stage {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, #e4d3b3 0%, transparent 60%),
+    radial-gradient(800px 600px at 110% 110%, #d6b89a 0%, transparent 55%),
+    linear-gradient(180deg, #d9c9b0 0%, #cdb999 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(rgba(60,40,20,.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  opacity: .5;
+}
+
+/* Scroll inside phone screen */
+.phone-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.phone-scroll::-webkit-scrollbar { display: none; }
+
+/* Common utilities */
+.hairline { border: 1px solid var(--border); }
+.hairline-soft { border: 1px solid var(--border-soft); }
+.shadow-card { box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 6px 18px rgba(110,70,40,.08); }
+.shadow-card-strong { box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 12px 30px rgba(110,70,40,.14); }
+
+.serif { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.01em; }
+.tnum { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); }
+
+/* Tap state */
+.tap { transition: transform .12s ease, background .15s ease, box-shadow .15s ease; cursor: pointer; }
+.tap:active { transform: scale(.985); }
+
+/* Subtle entrance */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px);} to { opacity:1; transform:none; } }
+.fadeUp { animation: fadeUp .35s ease both; }
+
+/* Pulse for crisis */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(142,42,42,.45); }
+  100% { box-shadow: 0 0 0 18px rgba(142,42,42,0); }
+}
+.pulse-ring { animation: pulse-ring 1.6s ease-out infinite; }
+
+/* Hibiscus petal motif (subtle bg) */
+.petal-bg {
+  background-image:
+    radial-gradient(circle at 92% 8%, rgba(155,45,63,.07) 0 12%, transparent 13%),
+    radial-gradient(circle at 8% 92%, rgba(155,45,63,.05) 0 14%, transparent 15%);
+}
+
+/* Header curve */
+.curve-bottom {
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+}
+
+/* Hide scrollbars on horizontal scrollers */
+.hscroll {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.hscroll::-webkit-scrollbar { display: none; }
