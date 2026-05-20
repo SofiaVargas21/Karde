@@ -22,22 +22,24 @@ function IMCScreen({ state, setIMC, go, gaugeVariant = 'arc' }) {
       <SubHeader title="Índice de Masa Corporal" onBack={() => go('home')} action={<button style={{ border:0, background:'transparent', color:'var(--muted)' }}><Icon name="info" size={20} /></button>} />
       {toast && <Toast>IMC guardado</Toast>}
 
-      <div style={{ padding: '6px 16px 0' }}>
+      <div style={{ padding: '0 16px 0' }}>
         {/* Gauge card */}
-        <Card style={{ padding: 20, paddingTop: 24, textAlign: 'center', overflow: 'hidden' }} accent={cls.color}>
+        <Card style={{ padding: '12px 14px 14px', textAlign: 'center', overflow: 'hidden' }} accent={cls.color}>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <IMCGauge value={calc} variant={gaugeVariant} size={gaugeVariant === 'ring' ? 230 : 260} />
+            <IMCGauge value={calc} variant={gaugeVariant} size={gaugeVariant === 'ring' ? 180 : 200} />
           </div>
-          <div style={{ marginTop: 14, fontSize: 12.5, color: 'var(--ink-2)', lineHeight: 1.5 }}>{cls.tip}</div>
+          <div style={{ marginTop: 8, fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.45 }}>{cls.tip}</div>
         </Card>
 
         {/* Inputs */}
-        <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          <Field label="Peso" value={peso} onChange={v => setPeso(Number(v) || 0)} type="number" suffix="kg" icon="scale" />
-          <Field label="Altura" value={altura} onChange={v => setAltura(Number(v) || 0)} type="number" suffix="m" />
-        </div>
+        <Card style={{ marginTop: 10, padding: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field label="Peso" value={peso} onChange={v => setPeso(Number(v) || 0)} type="number" suffix="kg" icon="scale" />
+            <Field label="Altura" value={altura} onChange={v => setAltura(Number(v) || 0)} type="number" suffix="m" />
+          </div>
+        </Card>
 
-        <div style={{ marginTop: 14 }}>
+        <div style={{ marginTop: 10 }}>
           <Button full size="lg" onClick={save}>Calcular y guardar</Button>
         </div>
 
@@ -74,12 +76,16 @@ function IMCScreen({ state, setIMC, go, gaugeVariant = 'arc' }) {
 
         {/* Evolution */}
         <div style={{ marginTop: 20 }}>
-          <SectionTitle subtitle="Tus últimas 8 semanas" title="Evolución del IMC" />
+          <SectionTitle subtitle="Esta semana" title="Evolución del IMC" />
           <Card>
-            <LineChart series={[{ data: state.history.imc, color: 'var(--hibiscus)' }]} width={320} height={140} yMin={Math.min(...state.history.imc) - 1.5} yMax={Math.max(...state.history.imc) + 1.5} fill />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--muted)', marginTop: 4, padding: '0 30px 0 30px' }}>
-              <span>S1</span><span>S2</span><span>S3</span><span>S4</span><span>S5</span><span>S6</span><span>S7</span><span>Hoy</span>
-            </div>
+            <LineChart 
+              series={[{ data: state.history.imc.slice(-7), color: 'var(--hibiscus)' }]} 
+              width={320} height={140} 
+              yMin={Math.min(...state.history.imc.slice(-7)) - 1.5} 
+              yMax={Math.max(...state.history.imc.slice(-7)) + 1.5} 
+              fill 
+              labels={['L', 'M', 'M', 'J', 'V', 'S', 'D']}
+            />
           </Card>
         </div>
       </div>
@@ -159,7 +165,7 @@ function TensionScreen({ state, setTension, go, alertVariant = 'modal' }) {
 
         {/* Trend chart */}
         <div style={{ marginTop: 20 }}>
-          <SectionTitle subtitle="Últimas 2 semanas" title="Evolución" action={
+          <SectionTitle subtitle="Esta semana" title="Evolución" action={
             <button style={{ border: 0, background: 'transparent', fontSize: 12, color: 'var(--hibiscus)', fontWeight: 700 }} onClick={() => go('history')}>Ver todo →</button>
           } />
           <Card>
@@ -169,10 +175,11 @@ function TensionScreen({ state, setTension, go, alertVariant = 'modal' }) {
             </div>
             <LineChart
               series={[
-                { data: state.history.sys, color: 'var(--hibiscus)' },
-                { data: state.history.dia, color: 'var(--sage)' },
+                { data: state.history.sys.slice(-7), color: 'var(--hibiscus)' },
+                { data: state.history.dia.slice(-7), color: 'var(--sage)' },
               ]}
               width={320} height={150} yMin={60} yMax={170} fill
+              labels={['L', 'M', 'M', 'J', 'V', 'S', 'D']}
             />
           </Card>
         </div>

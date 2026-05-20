@@ -3,7 +3,7 @@
    OnboardingScreen, LoginScreen, DashboardScreen, IMCScreen, TensionScreen,
    WaterScreen, HealthScreen, HistoryScreen, ProfileScreen, NotificationsScreen,
    TabBar, classifyTension, classifyIMC */
-const { useState, useEffect, useMemo } = React;
+var { useState, useEffect, useMemo } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "sys": 138,

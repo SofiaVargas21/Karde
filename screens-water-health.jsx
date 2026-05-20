@@ -21,6 +21,11 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
     addJamaica(j + 1);
   };
 
+  const handleRemoveJamaica = () => {
+    if (j <= 0) return;
+    addJamaica(j - 1);
+  };
+
   return (
     <div style={{ paddingBottom: 90, background: 'var(--bg)' }}>
       {showToast && <Toast tone="warning">Límite alcanzado: máximo 3 tazas diarias.</Toast>}
@@ -92,12 +97,22 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
                 <div style={{ fontWeight: 700, fontSize: 14 }}>{j} tazas hoy</div>
                 <div style={{ fontSize: 11.5, color: 'var(--muted)', marginTop: 2 }}>Rica en antioxidantes</div>
               </div>
-              <button onClick={handleAddJamaica} style={{
-                border: 0, background: 'var(--hibiscus)', color: '#FFFEFB',
-                width: 40, height: 40, borderRadius: 999,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 6px 14px rgba(155,45,63,.3)'
-              }}><Icon name="plus" size={18} color="#FFFEFB" /></button>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button onClick={handleRemoveJamaica} style={{
+                  border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--ink)',
+                  width: 40, height: 40, borderRadius: 999,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 4px 10px rgba(0,0,0,.05)',
+                  cursor: 'pointer'
+                }}><Icon name="minus" size={18} color="var(--ink)" /></button>
+                <button onClick={handleAddJamaica} style={{
+                  border: 0, background: 'var(--hibiscus)', color: '#FFFEFB',
+                  width: 40, height: 40, borderRadius: 999,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '0 6px 14px rgba(155,45,63,.3)',
+                  cursor: 'pointer'
+                }}><Icon name="plus" size={18} color="#FFFEFB" /></button>
+              </div>
             </div>
           </Card>
         </div>
@@ -116,8 +131,6 @@ function WaterScreen({ state, setWater, addJamaica, go }) {
       </div>
     </div>
   );
-}
-
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -155,9 +168,11 @@ function JamaicaRecipeOverlay({ onClose }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           {steps.map(s => (
             <Card key={s.n} style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <span className="serif" style={{ fontSize: 32, lineHeight: 1, color: 'var(--hibiscus)' }}>{s.n}</span>
-                {s.icon && <Icon name={s.icon} size={18} color="var(--muted-2)" />}
+              <div style={{
+                height: 120, borderRadius: 10, overflow: 'hidden',
+                background: 'var(--bg-deep)', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <img src={`Pasos/Paso_${s.n}.png`} alt={`Paso ${s.n}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.25 }}>{s.t}</div>

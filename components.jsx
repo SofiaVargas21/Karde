@@ -1,5 +1,5 @@
 /* global React */
-const { useState, useEffect, useMemo, useRef } = React;
+var { useState, useEffect, useMemo, useRef } = React;
 
 // ─────────────────────────────────────────────────────────────
 // Icons (line-style, original)
@@ -140,8 +140,8 @@ function IMCArcGauge({ value, t, cls, size = 260 }) {
         <line x1={cx} y1={cy} x2={nx} y2={ny} stroke="#2A1F1A" strokeWidth="3" strokeLinecap="round" />
         <circle cx={cx} cy={cy} r="9" fill="#FFFEFB" stroke="#2A1F1A" strokeWidth="2.5" />
       </svg>
-      <div style={{ textAlign: 'center', marginTop: -8 }}>
-        <div className="serif" style={{ fontSize: 56, lineHeight: 1, letterSpacing: '-0.02em' }}>{value.toFixed(1)}</div>
+      <div style={{ textAlign: 'center', marginTop: -6 }}>
+        <div className="serif" style={{ fontSize: size < 220 ? 44 : 56, lineHeight: 1, letterSpacing: '-0.02em' }}>{value.toFixed(1)}</div>
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           padding: '4px 10px', borderRadius: 999, marginTop: 8,
@@ -601,20 +601,22 @@ function Button({ children, onClick, variant = 'primary', icon, full, size = 'md
 // ─────────────────────────────────────────────────────────────
 function Field({ label, value, onChange, placeholder, type = 'text', suffix, icon }) {
   return (
-    <label style={{ display: 'block' }}>
+    <label style={{ display: 'block', minWidth: 0 }}>
       {label && <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>{label}</div>}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '12px 14px', borderRadius: 14,
+        display: 'flex', alignItems: 'center', gap: 8,
+        padding: '12px 10px', borderRadius: 14,
         background: 'var(--surface)', border: '1px solid var(--border-soft)',
+        minWidth: 0,
       }}>
-        {icon && <Icon name={icon} size={18} color="var(--muted)" />}
+        {icon && <Icon name={icon} size={16} color="var(--muted)" />}
         <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
           style={{
             flex: 1, border: 0, outline: 'none', background: 'transparent',
-            fontSize: 15, color: 'var(--ink)', fontFamily: 'inherit', minWidth: 0,
+            fontSize: 14, color: 'var(--ink)', fontFamily: 'inherit', minWidth: 0,
+            width: '100%',
           }} />
-        {suffix && <span style={{ fontSize: 12, color: 'var(--muted)' }}>{suffix}</span>}
+        {suffix && <span style={{ fontSize: 11, color: 'var(--muted)', flexShrink: 0 }}>{suffix}</span>}
       </div>
     </label>
   );

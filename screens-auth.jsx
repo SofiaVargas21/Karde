@@ -17,7 +17,7 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
 
   return (
     <div style={{
-      padding: '20px 20px 24px', minHeight: '100%', display: 'flex', flexDirection: 'column',
+      padding: '12px 16px 16px', minHeight: '100%', display: 'flex', flexDirection: 'column',
       background: 'linear-gradient(180deg, var(--hibiscus-tint) 0%, var(--bg) 38%)'
     }}>
       {/* Top */}
@@ -41,14 +41,14 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
       </div>
 
       {/* Brand */}
-      <div style={{ marginTop: 26, textAlign: 'center' }}>
+      <div style={{ marginTop: 12, textAlign: 'center' }}>
         <BrandMark />
-        <div className="serif" style={{ fontSize: 38, lineHeight: 1, marginTop: 14, letterSpacing: '-.02em' }}>
+        <div className="serif" style={{ fontSize: 30, lineHeight: 1.1, marginTop: 10, letterSpacing: '-.02em' }}>
           {step === 0 && 'Bienvenida a Kardé'}
           {step === 1 && 'Cuéntanos de ti'}
           {step === 2 && 'Casi listo'}
         </div>
-        <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 8, maxWidth: 280, marginInline: 'auto', lineHeight: 1.45 }}>
+        <div style={{ fontSize: 12.5, color: 'var(--muted)', marginTop: 6, maxWidth: 280, marginInline: 'auto', lineHeight: 1.4 }}>
           {step === 0 && 'Tu acompañante de hábitos cardiovasculares. Mide, observa y mejora.'}
           {step === 1 && 'Usaremos tus datos para personalizar tus mediciones y recomendaciones.'}
           {step === 2 && 'Crea tu acceso. Tus datos viven en tu dispositivo.'}
@@ -56,7 +56,7 @@ function OnboardingScreen({ onComplete, onGoLogin }) {
       </div>
 
       {/* Steps */}
-      <div style={{ marginTop: 26, flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+      <div style={{ marginTop: 14, flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {step === 0 && <Welcome />}
         {step === 1 && <ProfileStep data={data} set={set} />}
         {step === 2 && <CredentialsStep data={data} set={set} />}
@@ -123,28 +123,29 @@ function Welcome() {
 
 function ProfileStep({ data, set }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <Card style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '14px 16px' }}>
       <div>
-        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 8 }}>Sexo</div>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>Sexo</div>
         <div style={{ display: 'flex', gap: 8 }}>
           {[{ k: 'F', l: 'Femenino' }, { k: 'M', l: 'Masculino' }, { k: 'O', l: 'Otro' }].map(o => {
             const on = data.sexo === o.k;
             return (
               <button key={o.k} onClick={() => set('sexo', o.k)} style={{
-                flex: 1, padding: '12px 8px', border: on ? '1px solid var(--hibiscus)' : '1px solid var(--border)',
-                background: on ? 'var(--hibiscus-tint)' : 'var(--surface)', borderRadius: 12,
+                flex: 1, padding: '10px 6px', border: on ? '1px solid var(--hibiscus)' : '1px solid var(--border)',
+                background: on ? 'var(--hibiscus-tint)' : 'var(--surface-2)', borderRadius: 12,
                 fontWeight: 600, fontSize: 13, color: on ? 'var(--hibiscus)' : 'var(--ink-2)',
+                cursor: 'pointer'
               }}>{o.l}</button>
             );
           })}
         </div>
       </div>
       <Field label="Edad" value={data.edad} onChange={v => set('edad', Number(v) || 0)} type="number" suffix="años" />
-      <div style={{ display: 'flex', gap: 12 }}>
-        <div style={{ flex: 1 }}><Field label="Peso" value={data.peso} onChange={v => set('peso', Number(v) || 0)} type="number" suffix="kg" /></div>
-        <div style={{ flex: 1 }}><Field label="Altura" value={data.altura} onChange={v => set('altura', Number(v) || 0)} type="number" suffix="m" /></div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        <Field label="Peso" value={data.peso} onChange={v => set('peso', Number(v) || 0)} type="number" suffix="kg" />
+        <Field label="Altura" value={data.altura} onChange={v => set('altura', Number(v) || 0)} type="number" suffix="m" />
       </div>
-    </div>
+    </Card>
   );
 }
 
