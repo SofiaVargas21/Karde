@@ -111,6 +111,8 @@ function App() {
     screen = <LoginScreen onLogin={(d) => { setUser({ ...user, ...d }); setRoute('main'); setTab('home'); }} onGoSignup={() => setRoute('onboarding')} />;
   } else if (route === 'tension') {
     screen = <TensionScreen state={merged} setTension={(v) => setTweak({ sys: v.sys, dia: v.dia, pulse: v.pulse })} go={go} alertVariant={t.alertVariant} />;
+  } else if (route === 'tension-info') {
+    screen = <TensionInfoScreen go={go} />;
   } else if (route === 'imc') {
     screen = <IMCScreen state={merged} setIMC={(v) => setTweak('imc', +v.toFixed(1))} go={go} gaugeVariant={t.gaugeVariant} />;
   } else if (route === 'water') {

@@ -148,6 +148,11 @@ function TensionScreen({ state, setTension, go, alertVariant = 'modal' }) {
           </div>
         </Card>
 
+        {/* Información button */}
+        <div style={{ textAlign: 'right', marginTop: 10 }}>
+          <button onClick={() => go('tension-info')} style={{ background: 'transparent', border: 0, color: 'var(--st-crisis)', fontSize: 13, fontWeight: 700, padding: '4px 8px', cursor: 'pointer' }}>Información</button>
+        </div>
+
         {/* New measurement */}
         <div style={{ marginTop: 20 }}>
           <SectionTitle subtitle="Nueva medición" title="Registra tu lectura" />
@@ -353,4 +358,39 @@ function AlertOverlay({ cls, onDismiss, onGoHealth, variant = 'modal' }) {
   );
 }
 
-Object.assign(window, { IMCScreen, TensionScreen });
+// ─────────────────────────────────────────────────────────────
+// TENSION INFO SCREEN
+// ─────────────────────────────────────────────────────────────
+function TensionInfoScreen({ go }) {
+  const cards = [
+    { title: 'Tensión: Normal', sys: 'Sistolica: ≤120', dia: 'Diastolica: ≤80', bg: '#96D4A2', pill: '#80CA8D' },
+    { title: 'Tensión: Elevada', sys: 'Presión Sistólica: 120/129', dia: 'Presión Diastólica: 80', bg: '#E5BD66', pill: '#DAAE52' },
+    { title: 'Tensión: Hipertensión etapa 1', sys: 'Presión Sistólica: 130/139', dia: 'Presión Diastólica: 80/89', bg: '#EB8761', pill: '#E3754C' },
+    { title: 'Tensión: Hipertensión etapa 2', sys: 'Presión Sistólica: ≥140', dia: 'Presión Diastólica: ≥90', bg: '#E97A53', pill: '#E2693E' },
+    { title: 'Tensión: Crisis hipertensiva', sys: 'Presión Sistólica: ≥180', dia: 'Presión Diastólica: ≥90', bg: '#9D3F49', pill: '#8E2F3A' }
+  ];
+
+  return (
+    <div style={{ paddingBottom: 60, background: 'var(--bg)', minHeight: '100%' }}>
+      <SubHeader title="Tensión arterial" onBack={() => go('tension')} action={<button style={{ border:0, background:'transparent', color:'var(--muted)' }}><Icon name="info" size={20} /></button>} />
+      
+      <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {cards.map((c, i) => (
+          <div key={i} style={{ background: c.bg, borderRadius: 12, padding: '16px' }}>
+            <div style={{ fontSize: 18, color: '#1A1A1A', marginBottom: 12, fontWeight: 400 }}>{c.title}</div>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <div style={{ background: c.pill, color: '#1A1A1A', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 400 }}>
+                {c.sys}
+              </div>
+              <div style={{ background: c.pill, color: '#1A1A1A', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 400 }}>
+                {c.dia}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { IMCScreen, TensionScreen, TensionInfoScreen });

@@ -588,6 +588,10 @@ function App() {
       go: go,
       alertVariant: t.alertVariant
     });
+  } else if (route === 'tension-info') {
+    screen = /*#__PURE__*/React.createElement(TensionInfoScreen, {
+      go: go
+    });
   } else if (route === 'imc') {
     screen = /*#__PURE__*/React.createElement(IMCScreen, {
       state: merged,
@@ -5968,6 +5972,22 @@ function TensionScreen({
     small: true
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
+      textAlign: 'right',
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => go('tension-info'),
+    style: {
+      background: 'transparent',
+      border: 0,
+      color: 'var(--st-crisis)',
+      fontSize: 13,
+      fontWeight: 700,
+      padding: '4px 8px',
+      cursor: 'pointer'
+    }
+  }, "Informaci\xF3n")), /*#__PURE__*/React.createElement("div", {
+    style: {
       marginTop: 20
     }
   }, /*#__PURE__*/React.createElement(SectionTitle, {
@@ -6521,9 +6541,114 @@ function AlertOverlay({
     icon: isCrisis ? 'alert' : 'shield'
   }, isCrisis ? 'Llamar emergencia' : 'Ver acciones'))));
 }
+
+// ─────────────────────────────────────────────────────────────
+// TENSION INFO SCREEN
+// ─────────────────────────────────────────────────────────────
+function TensionInfoScreen({
+  go
+}) {
+  const cards = [{
+    title: 'Tensión: Normal',
+    sys: 'Sistolica: ≤120',
+    dia: 'Diastolica: ≤80',
+    bg: '#96D4A2',
+    pill: '#80CA8D'
+  }, {
+    title: 'Tensión: Elevada',
+    sys: 'Presión Sistólica: 120/129',
+    dia: 'Presión Diastólica: 80',
+    bg: '#E5BD66',
+    pill: '#DAAE52'
+  }, {
+    title: 'Tensión: Hipertensión etapa 1',
+    sys: 'Presión Sistólica: 130/139',
+    dia: 'Presión Diastólica: 80/89',
+    bg: '#EB8761',
+    pill: '#E3754C'
+  }, {
+    title: 'Tensión: Hipertensión etapa 2',
+    sys: 'Presión Sistólica: ≥140',
+    dia: 'Presión Diastólica: ≥90',
+    bg: '#E97A53',
+    pill: '#E2693E'
+  }, {
+    title: 'Tensión: Crisis hipertensiva',
+    sys: 'Presión Sistólica: ≥180',
+    dia: 'Presión Diastólica: ≥90',
+    bg: '#9D3F49',
+    pill: '#8E2F3A'
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingBottom: 60,
+      background: 'var(--bg)',
+      minHeight: '100%'
+    }
+  }, /*#__PURE__*/React.createElement(SubHeader, {
+    title: "Tensi\xF3n arterial",
+    onBack: () => go('tension'),
+    action: /*#__PURE__*/React.createElement("button", {
+      style: {
+        border: 0,
+        background: 'transparent',
+        color: 'var(--muted)'
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "info",
+      size: 20
+    }))
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14
+    }
+  }, cards.map((c, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      background: c.bg,
+      borderRadius: 12,
+      padding: '16px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 18,
+      color: '#1A1A1A',
+      marginBottom: 12,
+      fontWeight: 400
+    }
+  }, c.title), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 12,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: c.pill,
+      color: '#1A1A1A',
+      padding: '6px 12px',
+      borderRadius: 8,
+      fontSize: 12,
+      fontWeight: 400
+    }
+  }, c.sys), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: c.pill,
+      color: '#1A1A1A',
+      padding: '6px 12px',
+      borderRadius: 8,
+      fontSize: 12,
+      fontWeight: 400
+    }
+  }, c.dia))))));
+}
 Object.assign(window, {
   IMCScreen,
-  TensionScreen
+  TensionScreen,
+  TensionInfoScreen
 });
 "use strict";
 
